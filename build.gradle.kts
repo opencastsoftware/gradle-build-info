@@ -128,6 +128,9 @@ signing {
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications["pluginMaven"])
+    afterEvaluate {
+        sign(publishing.publications["buildInfoPluginPluginMarkerMaven"])
+    }
 }
 
 nexusPublishing {
