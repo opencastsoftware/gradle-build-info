@@ -1,6 +1,7 @@
 plugins {
     `java-gradle-plugin`
     `maven-publish`
+    `signing`
     id("com.gradle.plugin-publish") version "0.21.0"
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
     id("me.qoomon.git-versioning") version "5.2.0"
@@ -34,6 +35,11 @@ gitVersioning.apply {
 dependencies {
     implementation("com.squareup:javapoet:1.13.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 pluginBundle {
@@ -83,6 +89,13 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications["mavenJava"])
 }
 
 nexusPublishing {
