@@ -32,6 +32,8 @@ gitVersioning.apply {
     }
 }
 
+extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
+
 dependencies {
     implementation("com.squareup:javapoet:1.13.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
@@ -62,8 +64,7 @@ gradlePlugin {
 
 publishing {
     publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
+        create<MavenPublication>("pluginMaven") {
             pom {
                 name.set("Gradle Build Info Plugin")
                 description.set(project.description)
@@ -92,10 +93,15 @@ publishing {
 }
 
 signing {
+    setRequired({
+        (project.extra["isReleaseVersion"] as Boolean) &&
+            gradle.taskGraph.hasTask("publish")
+    })
+
     val signingKey: String? by project
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications["mavenJava"])
+    sign(configurations.archives.get())
 }
 
 nexusPublishing {
