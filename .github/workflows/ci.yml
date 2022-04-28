@@ -20,11 +20,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Download Java JDK
+        uses: typelevel/download-java@v2
+        id: download-java
+        with:
+          distribution: temurin
+          java-version: 11
+
       - name: Setup Java JDK
         uses: actions/setup-java@v3.2.0
         with:
+          distribution: jdkfile
           java-version: 11
-          distribution: temurin
+          jdkFile: ${{ steps.download-java.outputs.jdkFile }}
 
       - name: Build & Test
         uses: gradle/gradle-build-action@v2.1.5
