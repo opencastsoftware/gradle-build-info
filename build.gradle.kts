@@ -90,18 +90,44 @@ publishing {
             }
         }
     }
+
+    afterEvaluate {
+        publications {
+            (publications["buildInfoPluginPluginMarkerMaven"] as MavenPublication).apply {
+                pom {
+                    name.set("Gradle Build Info Plugin")
+                    description.set(project.description)
+                    url.set("https://github.com/opencastsoftware/gradle-build-info")
+                    licenses {
+                        license {
+                            name.set("The Apache License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("DavidGregory084")
+                            name.set("David Gregory")
+                            email.set("david.gregory@opencastsoftware.com")
+                        }
+                    }
+                    scm {
+                        connection.set("scm:git:https://github.com/opencastsoftware/gradle-build-info.git")
+                        developerConnection.set("scm:git:git@github.com:opencastsoftware/gradle-build-info.git")
+                        url.set("https://github.com/opencastsoftware/gradle-build-info")
+                    }
+                }
+            }
+        }
+    }
 }
 
 signing {
-    setRequired({
-        (project.extra["isReleaseVersion"] as Boolean) &&
-            gradle.taskGraph.hasTask("publish")
-    })
-
+    setRequired({ project.extra["isReleaseVersion"] as Boolean })
     val signingKey: String? by project
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(configurations.archives.get())
+    sign(publishing.publications["pluginMaven"])
 }
 
 nexusPublishing {
