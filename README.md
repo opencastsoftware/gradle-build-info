@@ -63,3 +63,7 @@ The generated sources directory for this plugin (`build/generated/sources/buildi
 ## Note
 
 This plugin generates Java code. As a result, if you do not enable the core Gradle `java` plugin, it will not do anything.
+
+## License
+
+All code in this repository is licensed under the Apache License, Version 2.0. See [LICENSE](./LICENSE).
