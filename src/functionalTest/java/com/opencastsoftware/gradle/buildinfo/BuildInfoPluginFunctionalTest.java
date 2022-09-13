@@ -85,7 +85,7 @@ class BuildInfoPluginFunctionalTest {
                         "public final class BuildInfoTest {\n" +
                         "  public static final String gradleVersion = \"7.4.1\";\n" +
                         "}\n",
-                Files.readString(buildInfoJava));
+                new String(Files.readAllBytes(buildInfoJava)));
     }
 
     @Test
@@ -114,7 +114,8 @@ class BuildInfoPluginFunctionalTest {
                 "package com.opencastsoftware.buildinfo;\n\n" +
                         "public final class BuildInfo {\n" +
                         "}\n",
-                Files.readString(buildInfoJava));
+                new String(Files.readAllBytes(buildInfoJava)));
+
     }
 
     @Test
@@ -143,7 +144,7 @@ class BuildInfoPluginFunctionalTest {
                 "package io.github.davidgregory084;\n\n" +
                         "public final class BuildInfo {\n" +
                         "}\n",
-                Files.readString(buildInfoJava));
+                new String(Files.readAllBytes(buildInfoJava)));
     }
 
     private void writeString(File file, String string) throws IOException {

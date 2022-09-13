@@ -25,13 +25,13 @@ jobs:
         id: download-java
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 8
 
       - name: Setup Java JDK
         uses: actions/setup-java@v3.2.0
         with:
           distribution: jdkfile
-          java-version: 11
+          java-version: 8
           jdkFile: ${{ steps.download-java.outputs.jdkFile }}
 
       - name: Build & Test
