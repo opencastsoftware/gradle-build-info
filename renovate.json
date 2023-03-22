@@ -7,6 +7,10 @@
     {
         "matchPackageNames": "me.qoomon.git-versioning",
         "allowedVersions": "<6"
+    },
+    {
+      "matchPackageNames": "gradle",
+      "allowedVersions": "<8"
     }
   ]
 }

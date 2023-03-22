@@ -13,7 +13,7 @@ Groovy (build.gradle):
 ```groovy
 plugins {
     id 'java'
-    id 'com.opencastsoftware.gradle.buildinfo' version '0.2.1'
+    id 'com.opencastsoftware.gradle.buildinfo' version '0.3.0'
 }
 ```
 
@@ -21,7 +21,7 @@ Kotlin (build.gradle.kts):
 ```kotlin
 plugins {
     java
-    id("com.opencastsoftware.gradle.buildinfo") version "0.2.1"
+    id("com.opencastsoftware.gradle.buildinfo") version "0.3.0"
 }
 ```
 

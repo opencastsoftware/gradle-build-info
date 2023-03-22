@@ -1,7 +1,7 @@
 plugins {
     `java-gradle-plugin`
-    alias(libs.plugins.gradleJavaConventions)
     alias(libs.plugins.gradlePluginPublish)
+    alias(libs.plugins.gradleJavaConventions)
 }
 
 repositories { mavenCentral() }
@@ -17,20 +17,16 @@ dependencies {
     testImplementation(libs.junitJupiter)
 }
 
-pluginBundle {
-    website = "https://www.opencastsoftware.com"
-    vcsUrl = "https://github.com/opencastsoftware/gradle-build-info.git"
-    description = project.description
-    tags = listOf("build", "info", "codegen", "code-generation", "java")
-}
-
 gradlePlugin {
+    website.set("https://github.com/opencastsoftware/gradle-build-info")
+    vcsUrl.set("https://github.com/opencastsoftware/gradle-build-info.git")
     plugins {
         create("buildInfoPlugin") {
             id = "com.opencastsoftware.gradle.buildinfo"
             displayName = "Build Info Plugin"
             description = project.description
             implementationClass = "com.opencastsoftware.gradle.buildinfo.BuildInfoPlugin"
+            tags.set(listOf("build", "info", "codegen", "code-generation", "java"))
         }
     }
 }

@@ -1,6 +1,6 @@
 [versions]
 gradleJavaConventions = "0.1.2"
-gradlePluginPublish = "1.1.0"
+gradlePluginPublish = "0.21.0"
 jacoco = "0.8.8"
 javaPoet = "1.13.0"
 junit = "5.9.2"
