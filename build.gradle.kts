@@ -36,6 +36,7 @@ mavenPublishing {
         name.set("Gradle Build Info Plugin")
         description.set(project.description)
         url.set("https://github.com/opencastsoftware/gradle-build-info")
+        inceptionYear.set("2022")
         licenses {
             license {
                 name.set("The Apache License, Version 2.0")

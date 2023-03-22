@@ -1,6 +1,13 @@
+/*
+ * SPDX-FileCopyrightText:  Copyright 2022-2023 Opencast Software Europe Ltd
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.opencastsoftware.gradle.buildinfo;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.gradle.testkit.runner.BuildResult;
+import org.gradle.testkit.runner.GradleRunner;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,10 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.gradle.testkit.runner.BuildResult;
-import org.gradle.testkit.runner.GradleRunner;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BuildInfoPluginFunctionalTest {
     @TempDir
