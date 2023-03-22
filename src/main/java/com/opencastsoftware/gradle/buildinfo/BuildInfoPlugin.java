@@ -1,12 +1,8 @@
+/*
+ * SPDX-FileCopyrightText:  Copyright 2022-2023 Opencast Software Europe Ltd
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.opencastsoftware.gradle.buildinfo;
-
-import java.io.File;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -15,6 +11,14 @@ import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskProvider;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BuildInfoPlugin implements Plugin<Project> {
     public void apply(Project project) {

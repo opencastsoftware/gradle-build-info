@@ -1,15 +1,12 @@
+/*
+ * SPDX-FileCopyrightText:  Copyright 2022-2023 Opencast Software Europe Ltd
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.opencastsoftware.gradle.buildinfo;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
-import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.MapProperty;
@@ -17,6 +14,12 @@ import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
+
+import javax.lang.model.element.Modifier;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 public abstract class GenerateBuildInfo extends DefaultTask {
     @Input

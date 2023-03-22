@@ -1,10 +1,14 @@
+/*
+ * SPDX-FileCopyrightText:  Copyright 2022-2023 Opencast Software Europe Ltd
+ * SPDX-License-Identifier: Apache-2.0
+ */
 package com.opencastsoftware.gradle.buildinfo;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class BuildInfoPluginTest {
     @Test
