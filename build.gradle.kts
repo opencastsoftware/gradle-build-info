@@ -1,48 +1,20 @@
 plugins {
     `java-gradle-plugin`
-    `maven-publish`
-    `signing`
-    id("com.gradle.plugin-publish") version "0.21.0"
-    id("io.github.gradle-nexus.publish-plugin") version "1.2.0"
-    id("me.qoomon.git-versioning") version "5.2.0"
+    alias(libs.plugins.gradleJavaConventions)
+    alias(libs.plugins.gradlePluginPublish)
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 group = "com.opencastsoftware.gradle"
+
 description = "A Gradle plugin for generating build info as Java code."
 
-version = "0.0.0-SNAPSHOT"
-
-gitVersioning.apply {
-    refs {
-        branch(".+") {
-            describeTagPattern = "v(?<version>.*)".toPattern()
-            version = "\${describe.tag.version:-0.0.0}-\${describe.distance}-\${commit.short}-SNAPSHOT"
-        }
-        tag("v(?<version>.*)") {
-            version = "\${ref.version}"
-        }
-    }
-    rev {
-        describeTagPattern = "v(?<version>.*)".toPattern()
-        version = "\${describe.tag.version:-0.0.0}-\${describe.distance}-\${commit.short}-SNAPSHOT"
-    }
-}
-
-extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")
+java { toolchain.languageVersion.set(JavaLanguageVersion.of(11)) }
 
 dependencies {
-    implementation("com.squareup:javapoet:1.13.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
-}
-
-java {
-    withJavadocJar()
-    withSourcesJar()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(8))
+    implementation(libs.javaPoet)
+    testImplementation(libs.junitJupiter)
 }
 
 pluginBundle {
@@ -63,105 +35,64 @@ gradlePlugin {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("pluginMaven") {
-            pom {
-                name.set("Gradle Build Info Plugin")
-                description.set(project.description)
-                url.set("https://github.com/opencastsoftware/gradle-build-info")
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("DavidGregory084")
-                        name.set("David Gregory")
-                        email.set("david.gregory@opencastsoftware.com")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:https://github.com/opencastsoftware/gradle-build-info.git")
-                    developerConnection.set("scm:git:git@github.com:opencastsoftware/gradle-build-info.git")
-                    url.set("https://github.com/opencastsoftware/gradle-build-info")
-                }
+mavenPublishing {
+    pom {
+        name.set("Gradle Build Info Plugin")
+        description.set(project.description)
+        url.set("https://github.com/opencastsoftware/gradle-build-info")
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("repo")
             }
         }
-    }
-
-    afterEvaluate {
-        publications {
-            (publications["buildInfoPluginPluginMarkerMaven"] as MavenPublication).apply {
-                pom {
-                    name.set("Gradle Build Info Plugin")
-                    description.set(project.description)
-                    url.set("https://github.com/opencastsoftware/gradle-build-info")
-                    licenses {
-                        license {
-                            name.set("The Apache License, Version 2.0")
-                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                        }
-                    }
-                    developers {
-                        developer {
-                            id.set("DavidGregory084")
-                            name.set("David Gregory")
-                            email.set("david.gregory@opencastsoftware.com")
-                        }
-                    }
-                    scm {
-                        connection.set("scm:git:https://github.com/opencastsoftware/gradle-build-info.git")
-                        developerConnection.set("scm:git:git@github.com:opencastsoftware/gradle-build-info.git")
-                        url.set("https://github.com/opencastsoftware/gradle-build-info")
-                    }
-                }
+        organization {
+            name.set("Opencast Software Europe Ltd")
+            url.set("https://opencastsoftware.com")
+        }
+        developers {
+            developer {
+                id.set("DavidGregory084")
+                name.set("David Gregory")
+                organization.set("Opencast Software Europe Ltd")
+                organizationUrl.set("https://opencastsoftware.com/")
+                timezone.set("Europe/London")
+                url.set("https://github.com/DavidGregory084")
             }
         }
-    }
-}
-
-signing {
-    setRequired({ project.extra["isReleaseVersion"] as Boolean })
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign(publishing.publications["pluginMaven"])
-    afterEvaluate {
-        sign(publishing.publications["buildInfoPluginPluginMarkerMaven"])
-    }
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        ciManagement {
+            system.set("Github Actions")
+            url.set("https://github.com/opencastsoftware/gradle-build-info/actions")
+        }
+        issueManagement {
+            system.set("GitHub")
+            url.set("https://github.com/opencastsoftware/gradle-build-info/issues")
+        }
+        scm {
+            connection.set("scm:git:https://github.com/opencastsoftware/gradle-build-info.git")
+            developerConnection.set("scm:git:git@github.com:opencastsoftware/gradle-build-info.git")
+            url.set("https://github.com/opencastsoftware/gradle-build-info")
         }
     }
 }
 
-val functionalTestImplementation by configurations.creating {
-    extendsFrom(configurations["testImplementation"])
+tasks.withType<JavaCompile>() {
+    // Target Java 8
+    options.release.set(8)
 }
 
-val functionalTestSourceSet = sourceSets.create("functionalTest") {
+testing {
+    suites {
+        val functionalTest by
+            registering(JvmTestSuite::class) {
+                gradlePlugin.testSourceSets(sources)
+                testType.set(TestSuiteType.FUNCTIONAL_TEST)
+            }
+    }
 }
 
-val functionalTest by tasks.registering(Test::class) {
-    testClassesDirs = functionalTestSourceSet.output.classesDirs
-    classpath = functionalTestSourceSet.runtimeClasspath
-    useJUnitPlatform()
-}
+val functionalTestImplementation: Configuration by
+    configurations.getting { extendsFrom(configurations.testImplementation.get()) }
 
-gradlePlugin.testSourceSets(functionalTestSourceSet)
-
-tasks.named<Task>("check") {
-    dependsOn(functionalTest)
-}
-
-tasks.named<Test>("test") {
-    useJUnitPlatform()
-}
+tasks.named<Task>("check") { dependsOn(testing.suites.named("functionalTest")) }
