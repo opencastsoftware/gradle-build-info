@@ -1,5 +1,5 @@
 [versions]
-gradleJavaConventions = "0.1.2"
+gradleJavaConventions = "0.1.3"
 gradlePluginPublish = "1.1.0"
 jacoco = "0.8.8"
 javaPoet = "1.13.0"
