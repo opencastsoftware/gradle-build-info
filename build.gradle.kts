@@ -38,6 +38,8 @@ gradlePlugin {
 }
 
 mavenPublishing {
+    coordinates("com.opencastsoftware.gradle", "gradle-build-info", project.version.toString())
+
     pom {
         name.set("Gradle Build Info Plugin")
         description.set(project.description)
