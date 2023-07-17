@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BuildInfoPlugin implements Plugin<Project> {
@@ -72,7 +73,9 @@ public class BuildInfoPlugin implements Plugin<Project> {
 
         SourceDirectorySet mainJavaSources = mainSourceSet.getJava();
 
-        mainJavaSources.getSrcDirs().add(destDir.toFile());
+        Set<File> mainSourceDirs = mainJavaSources.getSrcDirs();
+        mainSourceDirs.add(destDir.toFile());
+        mainJavaSources.setSrcDirs(mainSourceDirs);
 
         return mainSourceSet;
     }
