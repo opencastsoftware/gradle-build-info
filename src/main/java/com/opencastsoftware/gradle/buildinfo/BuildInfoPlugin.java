@@ -13,6 +13,7 @@ import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskContainer;
 import org.gradle.api.tasks.TaskProvider;
+import org.gradle.jvm.tasks.Jar;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -111,9 +112,10 @@ public class BuildInfoPlugin implements Plugin<Project> {
         tasks.getByName(mainSourceSet.getCompileJavaTaskName())
                 .dependsOn(generateBuildInfoTask);
 
-        if (tasks.getNames().contains(mainSourceSet.getSourcesJarTaskName())) {
-            tasks.getByName(mainSourceSet.getSourcesJarTaskName())
-                    .dependsOn(generateBuildInfoTask);
-        }
+        tasks.withType(Jar.class).configureEach(task -> {
+            if (task.getName().equals(mainSourceSet.getSourcesJarTaskName())) {
+                task.dependsOn(generateBuildInfoTask);
+            }
+        });
     }
 }
