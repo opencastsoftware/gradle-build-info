@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText:  Copyright 2022-2023 Opencast Software Europe Ltd
+ * SPDX-FileCopyrightText:  © 2022-2023 Opencast Software Europe Ltd <https://opencastsoftware.com>
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.opencastsoftware.gradle.buildinfo;
@@ -18,22 +18,20 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BuildInfoPluginFunctionalTest {
-    @TempDir
-    File projectDir;
-
-    private File getBuildFile() {
+    private File getBuildFile(File projectDir) {
         return new File(projectDir, "build.gradle");
     }
 
-    private File getSettingsFile() {
+    private File getSettingsFile(File projectDir) {
         return new File(projectDir, "settings.gradle");
     }
 
-    private Path getGeneratedSrcDir() {
+    private Path getGeneratedSrcDir(File projectDir) {
         return projectDir.toPath()
                 .resolve("build")
                 .resolve("generated")
@@ -43,13 +41,13 @@ class BuildInfoPluginFunctionalTest {
                 .resolve("main");
     }
 
-    private Path getBuildInfoJavaFile(String packageFolder, String className) {
-        return getGeneratedSrcDir()
+    private Path getBuildInfoJavaFile(File projectDir, String packageFolder, String className) {
+        return getGeneratedSrcDir(projectDir)
                 .resolve(packageFolder)
                 .resolve(className + ".java");
     }
 
-    private BuildResult runBuildTask(String taskName) {
+    private BuildResult runBuildTask(File projectDir, String taskName) {
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
         runner.withPluginClasspath();
@@ -59,16 +57,19 @@ class BuildInfoPluginFunctionalTest {
     }
 
     @Test
-    void generatesBuildInfoCode() throws IOException {
+    void generatesBuildInfoCode(@TempDir File projectDir) throws IOException {
         List<String> packageSegments = Arrays.asList("com", "opencastsoftware", "buildinfo");
         String packageName = packageSegments.stream().collect(Collectors.joining("."));
         String packageFolder = packageSegments.stream().collect(Collectors.joining(File.separator));
 
-        writeString(getSettingsFile(), "");
-        writeString(getBuildFile(),
+        writeString(getSettingsFile(projectDir), "");
+        writeString(getBuildFile(projectDir),
                 "plugins {\n" +
                         "  id('java')\n" +
                         "  id('com.opencastsoftware.gradle.buildinfo')\n" +
+                        "}\n" +
+                        "repositories {\n" +
+                        "  mavenCentral()\n" +
                         "}\n" +
                         "buildInfo {\n" +
                         "  packageName = \"" + packageName + "\"\n" +
@@ -76,13 +77,14 @@ class BuildInfoPluginFunctionalTest {
                         "  properties = [gradleVersion: \"7.4.1\"]" +
                         "}");
 
-        runBuildTask("generateBuildInfo");
+        runBuildTask(projectDir, "generateBuildInfo");
 
-        Path buildInfoJava = getGeneratedSrcDir()
+        Path buildInfoJava = getGeneratedSrcDir(projectDir)
                 .resolve(packageFolder)
                 .resolve("BuildInfoTest.java");
 
-        assert (Files.exists(buildInfoJava));
+        assertTrue(Files.exists(buildInfoJava));
+
         assertEquals(
                 "package com.opencastsoftware.buildinfo;\n\n" +
                         "import java.lang.String;\n\n" +
@@ -93,26 +95,29 @@ class BuildInfoPluginFunctionalTest {
     }
 
     @Test
-    void generatesBuildInfoCodeWithDefaults() throws IOException {
+    void generatesBuildInfoCodeWithDefaults(@TempDir File projectDir) throws IOException {
         List<String> packageSegments = Arrays.asList("com", "opencastsoftware", "buildinfo");
         String packageName = packageSegments.stream().collect(Collectors.joining("."));
         String packageFolder = packageSegments.stream().collect(Collectors.joining(File.separator));
 
-        writeString(getSettingsFile(), "");
-        writeString(getBuildFile(),
+        writeString(getSettingsFile(projectDir), "");
+        writeString(getBuildFile(projectDir),
                 "plugins {\n" +
                         "  id('java')\n" +
                         "  id('com.opencastsoftware.gradle.buildinfo')\n" +
+                        "}\n" +
+                        "repositories {\n" +
+                        "  mavenCentral()\n" +
                         "}\n" +
                         "buildInfo {\n" +
                         "  packageName = \"" + packageName + "\"\n" +
                         "}");
 
-        runBuildTask("generateBuildInfo");
+        runBuildTask(projectDir, "generateBuildInfo");
 
-        Path buildInfoJava = getBuildInfoJavaFile(packageFolder, "BuildInfo");
+        Path buildInfoJava = getBuildInfoJavaFile(projectDir, packageFolder, "BuildInfo");
 
-        assert (Files.exists(buildInfoJava));
+        assertTrue(Files.exists(buildInfoJava));
 
         assertEquals(
                 "package com.opencastsoftware.buildinfo;\n\n" +
@@ -123,32 +128,54 @@ class BuildInfoPluginFunctionalTest {
     }
 
     @Test
-    void generatesBuildInfoCodeWithDifferentPackage() throws IOException {
+    void generatesBuildInfoCodeWithDifferentPackage(@TempDir File projectDir) throws IOException {
         List<String> packageSegments = Arrays.asList("io", "github", "davidgregory084");
         String packageName = packageSegments.stream().collect(Collectors.joining("."));
         String packageFolder = packageSegments.stream().collect(Collectors.joining(File.separator));
 
-        writeString(getSettingsFile(), "");
-        writeString(getBuildFile(),
+        writeString(getSettingsFile(projectDir), "");
+        writeString(getBuildFile(projectDir),
                 "plugins {\n" +
                         "  id('java')\n" +
                         "  id('com.opencastsoftware.gradle.buildinfo')\n" +
+                        "}\n" +
+                        "repositories {\n" +
+                        "  mavenCentral()\n" +
                         "}\n" +
                         "buildInfo {\n" +
                         "  packageName = \"" + packageName + "\"\n" +
                         "}");
 
-        runBuildTask("generateBuildInfo");
+        runBuildTask(projectDir, "generateBuildInfo");
 
-        Path buildInfoJava = getBuildInfoJavaFile(packageFolder, "BuildInfo");
+        Path buildInfoJava = getBuildInfoJavaFile(projectDir, packageFolder, "BuildInfo");
 
-        assert (Files.exists(buildInfoJava));
+        assertTrue(Files.exists(buildInfoJava));
 
         assertEquals(
                 "package io.github.davidgregory084;\n\n" +
                         "public final class BuildInfo {\n" +
                         "}\n",
                 new String(Files.readAllBytes(buildInfoJava)));
+    }
+
+    @Test
+    void generatesNothingWhenPackageIsUndefined(@TempDir File projectDir) throws IOException {
+        writeString(getSettingsFile(projectDir), "");
+        writeString(getBuildFile(projectDir),
+                "plugins {\n" +
+                        "  id('java')\n" +
+                        "  id('com.opencastsoftware.gradle.buildinfo')\n" +
+                        "}\n" +
+                        "repositories {\n" +
+                        "  mavenCentral()\n" +
+                        "}");
+
+        runBuildTask(projectDir, "generateBuildInfo");
+
+        try (Stream<Path> entries = Files.list(getGeneratedSrcDir(projectDir))) {
+            assertFalse(entries.findFirst().isPresent());
+        }
     }
 
     private void writeString(File file, String string) throws IOException {

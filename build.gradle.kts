@@ -1,5 +1,6 @@
 plugins {
     `java-gradle-plugin`
+    alias(libs.plugins.gradleBuildInfo)
     alias(libs.plugins.gradlePluginPublish)
     alias(libs.plugins.gradleJavaConventions)
 }
@@ -12,8 +13,13 @@ description = "A Gradle plugin for generating build info as Java code."
 
 java { toolchain.languageVersion.set(JavaLanguageVersion.of(11)) }
 
+buildInfo {
+    packageName.set("com.opencastsoftware.gradle.buildinfo")
+    properties.set(mapOf("javaPoetVersion" to libs.versions.javaPoet.get()))
+}
+
 dependencies {
-    implementation(libs.javaPoet)
+    compileOnly(libs.javaPoet)
     testImplementation(libs.junitJupiter)
 }
 

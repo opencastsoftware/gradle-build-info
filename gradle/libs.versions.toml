@@ -1,4 +1,5 @@
 [versions]
+gradleBuildInfo = "0.2.1"
 gradleJavaConventions = "0.1.3"
 gradlePluginPublish = "1.2.0"
 jacoco = "0.8.8"
@@ -10,5 +11,6 @@ javaPoet = { module = "com.squareup:javapoet", version.ref = "javaPoet" }
 junitJupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 
 [plugins]
+gradleBuildInfo = { id = "com.opencastsoftware.gradle.buildinfo", version.ref = "gradleBuildInfo" }
 gradleJavaConventions = { id = "com.opencastsoftware.gradle.java-conventions", version.ref = "gradleJavaConventions" }
 gradlePluginPublish = { id = "com.gradle.plugin-publish", version.ref = "gradlePluginPublish" }

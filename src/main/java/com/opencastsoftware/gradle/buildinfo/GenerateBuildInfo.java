@@ -1,28 +1,26 @@
 /*
- * SPDX-FileCopyrightText:  Copyright 2022-2023 Opencast Software Europe Ltd
+ * SPDX-FileCopyrightText:  © 2022-2023 Opencast Software Europe Ltd <https://opencastsoftware.com>
  * SPDX-License-Identifier: Apache-2.0
  */
 package com.opencastsoftware.gradle.buildinfo;
 
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.file.ConfigurableFileCollection;
 import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.provider.MapProperty;
 import org.gradle.api.provider.Property;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.OutputDirectory;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
+import org.gradle.workers.WorkQueue;
+import org.gradle.workers.WorkerExecutor;
 
-import javax.lang.model.element.Modifier;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
+import javax.inject.Inject;
 
 public abstract class GenerateBuildInfo extends DefaultTask {
+    @InputFiles
+    abstract public ConfigurableFileCollection getTaskClasspath();
+
     @Input
+    @Optional
     abstract public Property<String> getPackageName();
 
     @Input
@@ -34,33 +32,20 @@ public abstract class GenerateBuildInfo extends DefaultTask {
     @OutputDirectory
     abstract public RegularFileProperty getOutputDirectory();
 
+    @Inject
+    abstract public WorkerExecutor getWorkerExecutor();
+
     @TaskAction
-    public void generate() throws IOException {
-        String className = getClassName().get();
-        String packageName = getPackageName().get();
-        Map<String, String> properties = getProperties().get();
-        File outputDirectory = getOutputDirectory().get().getAsFile();
+    public void generate() {
+        WorkQueue workQueue = getWorkerExecutor().classLoaderIsolation(workerSpec -> {
+            workerSpec.getClasspath().from(getTaskClasspath());
+        });
 
-        TypeSpec.Builder classBuilder = TypeSpec
-                .classBuilder(className)
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-
-        for (Map.Entry<String, String> property : properties.entrySet()) {
-            String propertyName = property.getKey();
-            String propertyValue = property.getValue();
-
-            FieldSpec fieldSpec = FieldSpec
-                    .builder(String.class, propertyName, Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .initializer("$S", propertyValue)
-                    .build();
-
-            classBuilder.addField(fieldSpec);
-        }
-
-        JavaFile buildInfoFile = JavaFile
-                .builder(packageName, classBuilder.build())
-                .build();
-
-        buildInfoFile.writeTo(outputDirectory);
+        workQueue.submit(GenerateBuildInfoAction.class, parameters -> {
+            parameters.getPackageName().set(getPackageName());
+            parameters.getClassName().set(getClassName());
+            parameters.getProperties().set(getProperties());
+            parameters.getOutputDirectory().set(getOutputDirectory());
+        });
     }
 }
