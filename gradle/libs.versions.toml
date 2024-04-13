@@ -4,7 +4,7 @@ gradleJavaConventions = "0.1.4"
 gradlePluginPublish = "1.2.1"
 jacoco = "0.8.8"
 javaPoet = "1.13.0"
-junit = "5.10.0"
+junit = "5.10.2"
 
 [libraries]
 javaPoet = { module = "com.squareup:javapoet", version.ref = "javaPoet" }
