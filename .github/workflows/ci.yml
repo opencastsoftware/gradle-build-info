@@ -39,7 +39,7 @@ jobs:
           jdkFile: ${{ steps.download-java.outputs.jdkFile }}
 
       - name: Build & Test
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3.3.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           arguments: build
 
@@ -52,13 +52,13 @@ jobs:
 
       - name: Publish To Sonatype
         if: github.event_name != 'pull_request' && (startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main')
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3.3.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           arguments: publishAllPublicationsToMavenCentral
 
       - name: Publish To Gradle Plugin Portal
         if: github.event_name != 'pull_request' && startsWith(github.ref, 'refs/tags/v')
-        uses: gradle/gradle-build-action@8baac4c8ef753599f92eeb509c246d09d6250fa6 # v3.3.0
+        uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
         with:
           arguments: |
             -Pgradle.publish.key=${{ secrets.GRADLE_PUBLISH_KEY }}
