@@ -4,7 +4,7 @@
   "packageRules": [
     {
       "matchPackageNames": "gradle",
-      "allowedVersions": "<8"
+      "allowedVersions": "<8.6"
     }
   ]
 }
