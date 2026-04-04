@@ -4,6 +4,9 @@
 [![License](https://img.shields.io/github/license/opencastsoftware/gradle-build-info)](https://opensource.org/licenses/Apache-2.0)
 [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.opencastsoftware.gradle.buildinfo)](https://plugins.gradle.org/plugin/com.opencastsoftware.gradle.buildinfo)
 [![Maven Central](https://img.shields.io/maven-central/v/com.opencastsoftware.gradle/gradle-build-info)](https://search.maven.org/artifact/com.opencastsoftware.gradle/gradle-build-info)
+![JDK Support](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fopencastsoftware%2Fgradle-build-info%2Frefs%2Fheads%2Fmain%2Fbuild.gradle.kts&search=options%5C.release%5C.set%5C((.*)%5C)&replace=%241%2B&logo=openjdk&label=JDK)
+![Gradle Support](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fopencastsoftware%2Fgradle-build-info%2Frefs%2Fheads%2Fmain%2Fgradle%2Fwrapper%2Fgradle-wrapper.properties&search=%2Fgradle-(.*)-bin.zip&replace=%241%2B&logo=gradle&label=Gradle)
+[![License](https://img.shields.io/github/license/opencastsoftware/gradle-build-info?color=blue)](https://spdx.org/licenses/Apache-2.0.html)
 
 **gradle-build-info** is a Gradle plugin for generating build info as Java code, inspired by [sbt-buildinfo](https://github.com/sbt/sbt-buildinfo).
 
