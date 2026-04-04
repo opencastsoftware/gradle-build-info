@@ -1,7 +1,6 @@
 # gradle-build-info
 
 [![CI](https://github.com/opencastsoftware/gradle-build-info/actions/workflows/ci.yml/badge.svg)](https://github.com/opencastsoftware/gradle-build-info/actions/workflows/ci.yml)
-[![License](https://img.shields.io/github/license/opencastsoftware/gradle-build-info)](https://opensource.org/licenses/Apache-2.0)
 [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.opencastsoftware.gradle.buildinfo)](https://plugins.gradle.org/plugin/com.opencastsoftware.gradle.buildinfo)
 [![Maven Central](https://img.shields.io/maven-central/v/com.opencastsoftware.gradle/gradle-build-info)](https://search.maven.org/artifact/com.opencastsoftware.gradle/gradle-build-info)
 ![JDK Support](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fopencastsoftware%2Fgradle-build-info%2Frefs%2Fheads%2Fmain%2Fbuild.gradle.kts&search=options%5C.release%5C.set%5C((.*)%5C)&replace=%241%2B&logo=openjdk&label=JDK)
